@@ -11,11 +11,11 @@
       crossorigin="anonymous"
     />
   </head>
-  <body>
+  <body class="bg-dark">
     <div class="container">
       <div class="row">
         <div class="col">
-          <h1>TRAH Movies</h1>
+          <h1 class="fw-bold text-light">TRAH Movies</h1>
         </div>
       </div>
 
@@ -28,7 +28,7 @@
               placeholder="Search Movie"
             />
             <button
-              class="btn btn-outline-secondary search-button"
+              class="btn btn-outline-light search-button"
               type="button"
             >
               Search
@@ -37,12 +37,13 @@
         </div>
       </div>
 
-      <div class="row movie-container"></div>
+      <div class="row movie-container">
+
+      </div>
     </div>
 
 
     <!-- Modal -->
-
     <div
       class="modal fade"
       id="movieDetailModal"
@@ -76,6 +77,7 @@
         </div>
       </div>
     </div>
+    <!-- last modal -->
 
     
     <script

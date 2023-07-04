@@ -45,7 +45,7 @@ function updateUI(movies) {
 }
 
 function showCards(m) {
-return  `<div class="col-md-4 my-5">
+return `<div class="col-md-4 my-5 d-flex justify-content-center">
           <div class="card" style="width: 18rem">
             <img src="${m.Poster}" class="card-img-top" />
             <div class="card-body">
