@@ -32,8 +32,9 @@ function updateUIDetail(m) {
 function getMovies(keyword) {
     return fetch("http://www.omdbapi.com/?apikey=d6e3fc45&s=" + keyword)
       .then(response => response.json())
-      .then(response => response.Search)
+      .then(response => response.Search).catch(e=>console.log(e))
 }
+
 function updateUI(movies) {
   let cards = "";
   movies.forEach(m => {
