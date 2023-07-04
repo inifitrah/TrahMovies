@@ -1,24 +1,39 @@
 const searchButton = document.querySelector('.search-button')
 searchButton.addEventListener('click', async function () {
-  const inputKeyword = document.querySelector('.input-keyword')
-  const movies = await getMovies(inputKeyword.value)
-  updateUI(movies)
+  try {
+    
+    const inputKeyword = document.querySelector('.input-keyword')
+    const movies = await getMovies(inputKeyword.value)
+    updateUI(movies)
+
+  } catch (eror) {
+    alert(eror)
+  }
 
 })
 
 
-document.addEventListener('click', async function(e){
-  if (e.target.classList.contains('modal-detail-button')) {
-    const imdbID = e.target.dataset.imdb
-    const movieDetail = await getMoviesDetail(imdbID)
-    updateUIDetail(movieDetail)
+document.addEventListener('click', async function (e) {
+  try {
+    if (e.target.classList.contains('modal-detail-button')) {
+      const imdbID = e.target.dataset.imdb
+      const movieDetail = await getMoviesDetail(imdbID)
+      updateUIDetail(movieDetail)
+    }
+  } catch (eror) {
+    alert(eror)
   }
 })
 
 
 function getMoviesDetail(imdbID) {
   return fetch("https://www.omdbapi.com/?apikey=d6e3fc45&i=" + imdbID)
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(response.statusText)
+      }
+      return response.json();
+    })
     .then((m) => m);
 }
 
@@ -31,8 +46,18 @@ function updateUIDetail(m) {
 
 function getMovies(keyword) {
     return fetch("https://www.omdbapi.com/?apikey=d6e3fc45&s=" + keyword)
-      .then(response => response.json())
-      .then(response => response.Search).catch(e=>console.log(e))
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText)
+        }
+        return response.json();
+      })
+      .then(response => {
+        if (response.Response === "False") {
+          throw new Error(response.Error);
+        }
+        return response.Search;
+      })
 }
 
 function updateUI(movies) {
