@@ -1,37 +1,47 @@
-$('.search-button').on('click', function () {
-  
-  $.ajax({
-    url: "http://www.omdbapi.com/?apikey=d6e3fc45&s="+ $('.input-keyword').val(),
-    success: (result) => {
-      const movies = result.Search;
-      let cards = "";
-  
-      movies.forEach((m) => {
-        cards += showCards(m)
-      });
-      $(".movie-container").html(cards);
-  
-  
-      // ketika detail di klik \
-      $(".modal-detail-button").on('click', function () {
-        $.ajax({
-          url:
-            "http://www.omdbapi.com/?apikey=d6e3fc45&i=" + $(this).data("imdb"),
-          success: (m) => {
-            const movieDetail = showMovieDetails(m)
-            $(".modal-body").html(movieDetail);
-          },
-          error: (e) => console.log(e.textResponse),
-        });
-       console.log($(this).data('imdb'))
-      });
-    },
-    error: (e) => console.log(e.textResponse),
-  });
+const searchButton = document.querySelector('.search-button')
+searchButton.addEventListener('click', async function () {
+  const inputKeyword = document.querySelector('.input-keyword')
+  const movies = await getMovies(inputKeyword.value)
+  updateUI(movies)
 
 })
 
 
+document.addEventListener('click', async function(e){
+  if (e.target.classList.contains('modal-detail-button')) {
+    const imdbID = e.target.dataset.imdb
+    const movieDetail = await getMoviesDetail(imdbID)
+    updateUIDetail(movieDetail)
+  }
+})
+
+
+function getMoviesDetail(imdbID) {
+  return fetch("http://www.omdbapi.com/?apikey=d6e3fc45&i=" + imdbID)
+    .then((response) => response.json())
+    .then((m) => m);
+}
+
+function updateUIDetail(m) {
+  const movieDetail = showMovieDetails(m)
+  const modalBody = document.querySelector('.modal-body')
+  modalBody.innerHTML = movieDetail
+}
+
+
+function getMovies(keyword) {
+    return fetch("http://www.omdbapi.com/?apikey=d6e3fc45&s=" + keyword)
+      .then(response => response.json())
+      .then(response => response.Search)
+}
+function updateUI(movies) {
+  let cards = "";
+  movies.forEach(m => {
+    cards += showCards(m)
+    const movieContainer = document.querySelector('.movie-container')
+    movieContainer.innerHTML = cards
+  })
+}
 
 function showCards(m) {
 return  `<div class="col-md-4 my-5">
@@ -50,8 +60,6 @@ return  `<div class="col-md-4 my-5">
 
 function showMovieDetails(m) {
  return `<div class="container">
-
-
           <div class="row">
             <div class="col-md-3">
               <img src="${m.Poster}" class="img-fluid">
